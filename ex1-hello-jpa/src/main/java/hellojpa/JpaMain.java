@@ -14,16 +14,17 @@ public class JpaMain {
         EntityTransaction tx = em.getTransaction();
         tx.begin(); // db 트랜잭션 시작 - 데이터의 모든 변경은 트랜잭션 안에서 일어나야 함
         try{
-            List<Member> result = em.createQuery("select m from Member as m", Member.class)
-                .setFirstResult(1)
-                .setMaxResults(8)
-                .getResultList(); // 대상이 테이블이 아닌, 객체여야 함 -> Member entity(객체지향 쿼리)
+            //비영속
+             Member member = new Member();
+             member.setId(100L);
+             member.setName("HelloJPA");
 
-            for(Member member : result){
-                System.out.println("member.name : " + member.getName());
-            }
+             //영속상태, db에 저장x
+            System.out.println("BEFORE");
+            em.persist(member); //  INSERT 쿼리 발생X
+            System.out.println("AFTER");
 
-            tx.commit();
+            tx.commit(); // INSERT 쿼리 발생O
         }catch(Exception e) {
             tx.rollback();
         }finally{
