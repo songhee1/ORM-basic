@@ -14,19 +14,13 @@ public class JpaMain {
         EntityTransaction tx = em.getTransaction();
         tx.begin(); // db 트랜잭션 시작 - 데이터의 모든 변경은 트랜잭션 안에서 일어나야 함
         try{
-            //비영속
-             Member member = new Member();
-             member.setId(101L);
-             member.setName("HelloJPA");
+            //1차 캐시 존재x, SELECT 쿼리
+            Member member1 = em.find(Member.class, 101L);
+            //1차 캐시 존재O
+            Member member2 = em.find(Member.class, 101L);
 
-            // 영속상태, db에 저장x
-            em.persist(member); //  INSERT 쿼리 발생X, 1차 캐시에 저장
-
-            // 1차 캐시에 key=101L 존재하므로 SELECT 쿼리 발생X
-            Member findMember = em.find(Member.class, 101L);
-            System.out.println("findMember.id = "+findMember.getId());
-            System.out.println("findMember.name = "+findMember.getName());
-
+            // 같은 트랜잭션 안에서 객체 비교시 true
+            System.out.println("result = "+(member1 == member2));
             tx.commit(); // INSERT 쿼리 발생O
         }catch(Exception e) {
             tx.rollback();
