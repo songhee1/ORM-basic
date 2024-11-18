@@ -1,6 +1,7 @@
 package hellojpa;
 
 import jakarta.persistence.*;
+import java.util.List;
 
 public class JpaMain {
 
@@ -11,23 +12,17 @@ public class JpaMain {
         EntityManager em = emf.createEntityManager();
         //code
         EntityTransaction tx = em.getTransaction();
-        tx.begin(); // db 트랜잭션 시작
+        tx.begin(); // db 트랜잭션 시작 - 데이터의 모든 변경은 트랜잭션 안에서 일어나야 함
         try{
-            Member findMember = em.find(Member.class, 1L);
-            System.out.println("findMember.id = "+findMember.getId());
-            System.out.println("findMember.name = "+findMember.getName());
+            List<Member> result = em.createQuery("select m from Member as m", Member.class)
+                .setFirstResult(1)
+                .setMaxResults(8)
+                .getResultList(); // 대상이 테이블이 아닌, 객체여야 함 -> Member entity(객체지향 쿼리)
 
-            Member findMember2 = em.find(Member.class, 2L);
-            em.remove(findMember2); // delete 쿼리 및 삭제
+            for(Member member : result){
+                System.out.println("member.name : " + member.getName());
+            }
 
-            findMember.setName("HelloJPA");
-            //em.persist로 저장하지 않아도 됨
-            /*
-            * 이유: JPA를 통해서 엔티티를 가져오면 JPA에서 엔티티를 관리하게 됨
-            * 변경이 되었는지 등 트랜잭션을 체크함.
-            * 변경된 부분이 있다면 UPDATE 쿼리 날리고 transaction commit 날림
-            * JPA의 모든 DATA 변경은 트랜잭션 안에서 실행
-            * */
             tx.commit();
         }catch(Exception e) {
             tx.rollback();
@@ -35,6 +30,6 @@ public class JpaMain {
             em.close();
         }
 
-        emf.close();
+        emf.close(); // WAS 내려갈때 EntityManagerFactory를 close 해주어야 함
     }
 }
