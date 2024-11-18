@@ -14,14 +14,18 @@ public class JpaMain {
         EntityTransaction tx = em.getTransaction();
         tx.begin(); // db 트랜잭션 시작 - 데이터의 모든 변경은 트랜잭션 안에서 일어나야 함
         try{
-            //1차 캐시 존재x, SELECT 쿼리
-            Member member1 = em.find(Member.class, 101L);
-            //1차 캐시 존재O
-            Member member2 = em.find(Member.class, 101L);
 
-            // 같은 트랜잭션 안에서 객체 비교시 true
-            System.out.println("result = "+(member1 == member2));
-            tx.commit(); // INSERT 쿼리 발생O
+            //영속
+            Member member1 = new Member(150L, "A");
+            Member member2 = new Member(160L, "B");
+
+            em.persist(member1);
+            em.persist(member2);
+            //영속성 컨텍스트에 1차 캐시(엔티티), 쓰기 저장소(INSERT) 쌓임
+
+            System.out.println("===구분선====");
+
+            tx.commit(); // INSERT 2개 쿼리 발생O
         }catch(Exception e) {
             tx.rollback();
         }finally{
