@@ -16,13 +16,16 @@ public class JpaMain {
         try{
             //비영속
              Member member = new Member();
-             member.setId(100L);
+             member.setId(101L);
              member.setName("HelloJPA");
 
-             //영속상태, db에 저장x
-            System.out.println("BEFORE");
-            em.persist(member); //  INSERT 쿼리 발생X
-            System.out.println("AFTER");
+            // 영속상태, db에 저장x
+            em.persist(member); //  INSERT 쿼리 발생X, 1차 캐시에 저장
+
+            // 1차 캐시에 key=101L 존재하므로 SELECT 쿼리 발생X
+            Member findMember = em.find(Member.class, 101L);
+            System.out.println("findMember.id = "+findMember.getId());
+            System.out.println("findMember.name = "+findMember.getName());
 
             tx.commit(); // INSERT 쿼리 발생O
         }catch(Exception e) {
