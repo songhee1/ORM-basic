@@ -16,12 +16,13 @@ public class JpaMain {
         try{
 
             //영속
-            Member member = em.find(Member.class, 150L);//1차 캐시의 스냅샷으로 저장
-            member.setName("ZZZZZ"); //DATA 변경-1차 캐시의 value값이 변경
+            Member member = new Member(200L, "member200");
+            em.persist(member);
+            em.flush(); // INSERT 쿼리가 즉시 나감, 1차 캐시 그대로 유지, DB에 반영
 
             System.out.println("===구분선===");
-            
-            tx.commit(); // 커밋 시점에 UPDATE 쿼리 발생
+
+            tx.commit(); // 쿼리 커밋
         }catch(Exception e) {
             tx.rollback();
         }finally{
