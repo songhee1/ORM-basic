@@ -21,25 +21,13 @@ public class JpaMain {
 
             Member member = new Member();
             member.setName("member1");
-            member.setTeam(team);
+            member.changeTeam(team);
             em.persist(member);
 
-            //5. 객체지향적으로 양쪽 모두 세팅 필요
-            team.getMembers().add(member);
-            /*
-            * 1.
-            * (필요X) team.getMembers().add(member)
-            * -> (문제X) JPA 동작시 TEAM_ID로 members 세팅되기 때문
-            * */
-
-            //2. 아래 두 줄이 없다면?
-            /*em.flush();
-            em.clear();*/
-
-            Team findTeam = em.find(Team.class, team.getId()); //3. 1차 캐시 : member 없는 채로 team 객체 저장
+            Team findTeam = em.find(Team.class, team.getId());
             List<Member> members = findTeam.getMembers();
             for (Member m : members) {
-                System.out.println("m = "+m.getName()); // 4. 출력x
+                System.out.println("m = "+m.getName());
             }
 
             tx.commit();
