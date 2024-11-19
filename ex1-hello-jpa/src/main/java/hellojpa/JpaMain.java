@@ -1,7 +1,6 @@
 package hellojpa;
 
 import jakarta.persistence.*;
-import java.lang.reflect.Member;
 import java.util.List;
 
 public class JpaMain {
@@ -15,7 +14,10 @@ public class JpaMain {
         EntityTransaction tx = em.getTransaction();
         tx.begin(); // db 트랜잭션 시작 - 데이터의 모든 변경은 트랜잭션 안에서 일어나야 함
         try{
-
+            Member member = new Member();
+            System.out.println("===구분선===");
+            em.persist(member); // IDENTITY전략-INSERT 쿼리 즉시 발생
+            System.out.println("===구분선===");
             tx.commit(); // UPDATE 쿼리 발생x
         }catch(Exception e) {
             tx.rollback();
