@@ -14,15 +14,19 @@ public class JpaMain {
         EntityTransaction tx = em.getTransaction();
         tx.begin(); // db 트랜잭션 시작 - 데이터의 모든 변경은 트랜잭션 안에서 일어나야 함
         try{
+            Member member = new Member();
+            member.setId(1L);
+            member.setUsername("A");
+            member.setRoleType(RoleType.USER);
 
-            //영속
-            Member member = new Member(200L, "member200");
+            Member member2 = new Member();
+            member2.setId(2L);
+            member2.setUsername("B");
+            member2.setRoleType(RoleType.ADMIN);
+
             em.persist(member);
-            em.flush(); // INSERT 쿼리가 즉시 나감, 1차 캐시 그대로 유지, DB에 반영
-
-            System.out.println("===구분선===");
-
-            tx.commit(); // 쿼리 커밋
+            em.persist(member2);
+            tx.commit(); // UPDATE 쿼리 발생x
         }catch(Exception e) {
             tx.rollback();
         }finally{
