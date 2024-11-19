@@ -15,7 +15,7 @@ public class Team {
     private Long id;
     private String name;
 
-    @OneToMany(mappedBy = "team") // team에 의해 관리, 조회만 가능
+    @OneToMany(mappedBy = "team") // 읽기전용, 가짜 매핑
     private List<Member> members = new ArrayList<>();
 
     public Long getId() {
