@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
+import java.util.List;
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.domain.Team;
 
@@ -18,24 +19,20 @@ public class JpaMain {
             team.setName("TeamA");
             em.persist(team);
 
-            Team team2 = new Team();
-            team2.setName("TeamB");
-            em.persist(team2);
-
             Member member = new Member();
             member.setName("member1");
-            //(과거)member.setTeamId(team.getId()); // 객체 지향적x
             member.setTeam(team);
+
             em.persist(member);
             em.flush();
             em.clear(); // 영속성 컨텍스트 초기화(find로 SELECT 쿼리 발생 확인)
 
             Member findMember = em.find(Member.class, member.getId());
-            //(과거)Team findTeam = em.find(Team.class, findMember.getTeamId()); // 연관관계x
-            Team findTeam = findMember.getTeam();
-            System.out.println("findTeam = "+findTeam.getName());
+            List<Member> members = findMember.getTeam().getMembers();
 
-            findMember.setTeam(team2);
+            for (Member m : members) {
+                System.out.println("m = "+m.getName());
+            }
 
             tx.commit();
         }catch(Exception e){

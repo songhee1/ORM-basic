@@ -20,7 +20,7 @@ public class Member {
     //    private Long teamId;
 
     @ManyToOne(fetch = FetchType.LAZY) // 지연로딩 전략
-    @JoinColumn(name="TEAM_ID")
+    @JoinColumn(name="TEAM_ID") //연관관계 주인(외래키 관리)
     private Team team;
 
     public Long getId() {
