@@ -4,6 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +17,10 @@ public class MemberTest {
     private Long id;
     @Column(name = "USERNAME")
     private String username;
+
+    @ManyToOne
+    @JoinColumn(insertable = false, updatable = false, name = "TEAM_ID") //연관관계 주인 안되도록 설정, 읽기전용
+    private Team team;
 
     public MemberTest() {
     }
