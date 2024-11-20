@@ -8,8 +8,7 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE) // 상속관계 객체에 대한 매핑전략
-//@DiscriminatorColumn(name = "DTYPE") // 없어도 필수로 생성
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS) // 상속관계 객체에 대한 매핑전략
 public abstract class Item {
     @Id @GeneratedValue
     private Long id;
