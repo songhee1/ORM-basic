@@ -1,17 +1,21 @@
 package jpabook.jpashop.domain;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-public class Locker {
+public class Product {
     @Id @GeneratedValue
-    @Column(name = "LOCKER_ID")
     private Long id;
     private String name;
+
+    @ManyToMany(mappedBy = "products")
+    private List<MemberTest> members = new ArrayList<>();
 
     public Long getId() {
         return id;
