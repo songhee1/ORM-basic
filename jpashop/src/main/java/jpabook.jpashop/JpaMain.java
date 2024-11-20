@@ -19,12 +19,12 @@ public class JpaMain {
             movie.setName("바람과 함께 사라지다");
             movie.setPrice(10000);
 
-            em.persist(movie); //Item, Movie 테이블 INSERT
+            em.persist(movie); //Item 테이블 INSERT
 
             em.flush();
             em.clear();
 
-            Movie findMovie = em.find(Movie.class, movie.getId()); // Item, Member 내부조인 SELECT
+            Movie findMovie = em.find(Movie.class, movie.getId()); // Item 테이블 SELECT
             System.out.println("findMovie = "+findMovie);
 
             tx.commit();

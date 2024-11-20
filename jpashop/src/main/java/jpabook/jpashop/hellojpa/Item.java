@@ -8,9 +8,9 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED) // 상속관계 객체에 대한 매핑전략
-@DiscriminatorColumn(name = "DTYPE") // DATA INSERT시 자식 클래스 구분
-public class Item {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE) // 상속관계 객체에 대한 매핑전략
+//@DiscriminatorColumn(name = "DTYPE") // 없어도 필수로 생성
+public abstract class Item {
     @Id @GeneratedValue
     private Long id;
     private String name;
