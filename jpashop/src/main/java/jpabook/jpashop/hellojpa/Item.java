@@ -1,25 +1,21 @@
-package jpabook.jpashop.domain;
+package jpabook.jpashop.hellojpa;
 
-import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED) // 상속관계 객체에 대한 매핑전략
+@DiscriminatorColumn(name = "DTYPE") // DATA INSERT시 자식 클래스 구분
 public class Item {
     @Id @GeneratedValue
-    @Column(name = "ITEM_ID")
     private Long id;
     private String name;
     private int price;
-    private int stockQuantity;
 
-    @ManyToMany(mappedBy = "items")
-    private List<Category> categories = new ArrayList<>();
     public Long getId() {
         return id;
     }
@@ -43,12 +39,5 @@ public class Item {
     public void setPrice(int price) {
         this.price = price;
     }
-
-    public int getStockQuantity() {
-        return stockQuantity;
-    }
-
-    public void setStockQuantity(int stockQuantity) {
-        this.stockQuantity = stockQuantity;
-    }
 }
+// 상속 기본 전략:단일 테이블 전략

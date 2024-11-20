@@ -15,11 +15,6 @@ public class OrderItem {
     @ManyToOne
     @JoinColumn(name = "ORDER_ID")
     private Order order;
-
-    @ManyToOne
-    @JoinColumn(name = "ITEM_ID")
-    private Item item;
-
     private int orderPrice;
     private int count;
 
@@ -37,14 +32,6 @@ public class OrderItem {
 
     public void setOrder(Order order) {
         this.order = order;
-    }
-
-    public Item getItem() {
-        return item;
-    }
-
-    public void setItem(Item item) {
-        this.item = item;
     }
 
     public int getOrderPrice() {
