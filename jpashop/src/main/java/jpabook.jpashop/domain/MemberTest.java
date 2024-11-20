@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,9 +19,9 @@ public class MemberTest {
     @Column(name = "USERNAME")
     private String username;
 
-    @ManyToOne
-    @JoinColumn(insertable = false, updatable = false, name = "TEAM_ID") //연관관계 주인 안되도록 설정, 읽기전용
-    private Team team;
+    @OneToOne
+    @JoinColumn(name = "LOCKER_ID") // 테이블에 유니크제약조건 생성
+    private Locker locker;
 
     public MemberTest() {
     }
@@ -39,5 +40,13 @@ public class MemberTest {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public Locker getLocker() {
+        return locker;
+    }
+
+    public void setLocker(Locker locker) {
+        this.locker = locker;
     }
 }
