@@ -21,13 +21,12 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-            Member m1 = em.find(Member.class, member1.getId());
-            Member reference = em.getReference(Member.class, member1.getId());
-            System.out.println("m1 = " + m1.getClass());
-            System.out.println("reference = " + reference.getClass());
-            // 둘다 원본 반환 (프록시 객체 안나오는 이유 : 1. 성능상 이점X 2. JPA 메커니즘-트랜잭션 내 동시성 보장)
+            Member refMember = em.getReference(Member.class, member1.getId());
+            Member findMember = em.find(Member.class, member1.getId());
+            System.out.println("refMember = " + refMember.getClass()); // Proxy
+            System.out.println("reference = " + findMember.getClass()); // Proxy
 
-            System.out.println("m1 == reference" + (m1 == reference)); // true
+            System.out.println("m1 == reference" + (refMember == findMember)); // true 보장
             tx.commit();
         }catch(Exception e){
             tx.rollback();
