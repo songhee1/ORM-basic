@@ -1,11 +1,9 @@
-package jpabook.jpashop.hellojpa;
+package jpabook.jpashop.domain;
 
-import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
 @Entity
-@DiscriminatorValue("M") // DiscriminatorColumn값 지정
-public class Movie extends Item{
+public class Movie extends Item {
     private String director;
     private String actor;
 
