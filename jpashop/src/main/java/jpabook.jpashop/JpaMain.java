@@ -22,14 +22,14 @@ public class JpaMain {
             em.clear();
 
             Member refMember = em.getReference(Member.class, member1.getId());
-            Member findMember = em.find(Member.class, member1.getId());
             System.out.println("refMember = " + refMember.getClass()); // Proxy
-            System.out.println("reference = " + findMember.getClass()); // Proxy
 
-            System.out.println("m1 == reference" + (refMember == findMember)); // true 보장
+            em.detach(refMember); // 준영속 (clear, close 마찬가지) - 영속성 컨테스트 관리x
+            refMember.getName(); // 초기화 예외발생
             tx.commit();
         }catch(Exception e){
             tx.rollback();
+            e.printStackTrace();
         }finally {
             em.close();
         }
