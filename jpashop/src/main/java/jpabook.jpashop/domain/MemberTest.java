@@ -21,9 +21,8 @@ public class MemberTest {
     @Column(name = "USERNAME")
     private String username;
 
-    @ManyToMany
-    @JoinTable(name = "MEMBER_PRODUCT") // 중간 테이블 생성
-    private List<Product> products = new ArrayList<>();
+    @OneToMany(mappedBy = "memberTest")
+    private List<MemberTestProduct> memberTestProducts = new ArrayList<>();
 
     public MemberTest() {
     }
