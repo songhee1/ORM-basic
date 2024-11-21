@@ -24,16 +24,9 @@ public class ValueMain {
             member.setAddress(address);
             em.persist(member);
 
-            Address copyAddress = new Address(address.getCity(), address.getStreet(),
-                address.getZipcode()); // [2-1의 대안]값 타입은 복사해서 사용
-
-            MemberTest member2 = new MemberTest();
-            member2.setName("member2");
-//            member2.setAddress(address); // [1]값 타입 공유
-            member2.setAddress(copyAddress);
-            em.persist(member2);
-
-            member.getHomeAddress().setCity("new City"); //[1] 값 타입 공유 : UPDATE 2회, [2] UPDATE 1회, 공유X
+            //member.getAddress().setCity("xxx") 불가(객체 참조 공유 방지), 새 생성자로 변경
+            Address newAddress = new Address("NewCity", address.getStreet(), address.getZipcode());
+            member.setAddress(newAddress);
 
             tx.commit();
         }catch(Exception e){
