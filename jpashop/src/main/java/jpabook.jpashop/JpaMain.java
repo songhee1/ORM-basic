@@ -6,6 +6,7 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 import jdk.swing.interop.SwingInterOpUtils;
 import jpabook.jpashop.domain.Member;
+import org.hibernate.Hibernate;
 import org.hibernate.jpa.internal.PersistenceUnitUtilImpl;
 
 public class JpaMain {
@@ -25,8 +26,9 @@ public class JpaMain {
             Member refMember = em.getReference(Member.class, member1.getId());
             System.out.println("findMember = "+refMember.getClass()); // Proxy
             System.out.println("isLoaded = " + emf.getPersistenceUnitUtil().isLoaded(refMember)); // false
-            refMember.getName();
-            System.out.println("isLoaded = " + emf.getPersistenceUnitUtil().isLoaded(refMember)); // true
+            refMember.getName(); // 강제 초기화
+
+            Hibernate.initialize(refMember); // 강제초기화-하이버네이트 기능
 
             tx.commit();
         }catch(Exception e){
