@@ -11,8 +11,6 @@ import java.util.List;
 public class Team {
     @Id @GeneratedValue
     private Long id;
-    @OneToMany(mappedBy = "team")
-    List<MemberTest> memberTests = new ArrayList<>();
 
     private String name;
 
@@ -22,14 +20,6 @@ public class Team {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public List<MemberTest> getMemberTests() {
-        return memberTests;
-    }
-
-    public void setMemberTests(List<MemberTest> memberTests) {
-        this.memberTests = memberTests;
     }
 
     public String getName() {
