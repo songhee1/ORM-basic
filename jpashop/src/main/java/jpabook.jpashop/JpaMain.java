@@ -44,16 +44,18 @@ public class JpaMain {
             MemberTest findMember = em.find(MemberTest.class, member.getId()); // SELECT MEMBER, 지연로딩
             System.out.println("===구분선===");
 
-            //컬렉션은 지연로딩
-            List<Address> addressHistory = findMember.getAddressHistory(); // MEMBER_ID 외래키로 SELECT 1회
-            for (Address address : addressHistory) {
-                System.out.println("address = "+ address.getCity());
-            }
+            //homecity->newcity
+//            findMember.getHomeAddress().setCity("newCity"); 객체 참조 공유되므로 올바르지x
+            Address a = findMember.getHomeAddress();
+            findMember.setHomeAddress(new Address("newCity", a.getStreet(), a.getZipcode())); // 완전 교체
 
-            Set<String> favoriteFoods = findMember.getFavoriteFoods();
-            for (String favoriteFood : favoriteFoods) {
-                System.out.println("food = " + favoriteFood); // SELECT 1회
-            }
+            // 치킨 -> 한식
+            findMember.getFavoriteFoods().remove("치킨");//DELETE FAVORITE_FOOD
+            findMember.getFavoriteFoods().add("한식"); // List<String> String 자체가 값 타입, 완전 교체, INSERT FAVORITE_FOOD
+
+            //
+            findMember.getAddressHistory().remove(new Address("old1", "street", "zipcode")); //equals 재정의 필수, DELETECT ADDRESS WHERE MEMBER_ID
+            findMember.getAddressHistory().add(new Address("newCity1", "street", "zipcode")); // INSERT ADDRESS 2회
 
             tx.commit();
         }catch(Exception e){
