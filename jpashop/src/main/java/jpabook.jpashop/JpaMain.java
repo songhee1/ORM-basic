@@ -7,6 +7,7 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.TypedQuery;
 import java.util.List;
+import java.util.Set;
 import jdk.swing.interop.SwingInterOpUtils;
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.test.Address;
@@ -36,6 +37,24 @@ public class JpaMain {
             member.getAddressHistory().add(new Address("old2", "street", "zipcode"));
 
             em.persist(member); // persist 1회로 관련 값 타입 갯수대로 각각 INSERT, 라이프사이클이 member에 종속(모두 값 타입)
+            
+            em.flush();
+            em.clear();
+            System.out.println("===구분선===");
+            MemberTest findMember = em.find(MemberTest.class, member.getId()); // SELECT MEMBER, 지연로딩
+            System.out.println("===구분선===");
+
+            //컬렉션은 지연로딩
+            List<Address> addressHistory = findMember.getAddressHistory(); // MEMBER_ID 외래키로 SELECT 1회
+            for (Address address : addressHistory) {
+                System.out.println("address = "+ address.getCity());
+            }
+
+            Set<String> favoriteFoods = findMember.getFavoriteFoods();
+            for (String favoriteFood : favoriteFoods) {
+                System.out.println("food = " + favoriteFood); // SELECT 1회
+            }
+
             tx.commit();
         }catch(Exception e){
             tx.rollback();
