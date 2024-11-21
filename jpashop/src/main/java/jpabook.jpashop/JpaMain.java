@@ -41,13 +41,12 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-            List<MemberTest> members = em.createQuery("select m from MemberTest m",
-                MemberTest.class).getResultList(); // JPQL : 그대로 SQL 번역, 1회 쿼리, 이후 Member 갯수만큼(N) Team SELECT
-            // SQL : select * from Member
-            // EAGER
-            // SQL : select * from Team where TEAM_ID = member.TEAM_ID
+            List<MemberTest> members = em.createQuery("select m from MemberTest m join fetch m.team", // LAZY loading + fetch join = Member, Team SELECT
+                MemberTest.class).getResultList();
 
-            //LAZY 변경시 1회 쿼리
+            for (MemberTest memberTest :members) {
+                System.out.println(memberTest.getTeam().getName()); // Team SELECT X
+            }
 
             tx.commit();
         }catch(Exception e){
