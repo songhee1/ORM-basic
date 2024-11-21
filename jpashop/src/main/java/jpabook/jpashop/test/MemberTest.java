@@ -11,7 +11,7 @@ import jakarta.persistence.ManyToOne;
 public class MemberTest {
     @Id @GeneratedValue
     private Long id;
-    @ManyToOne(fetch = FetchType.LAZY) // Team 프록시 객체로 조회
+    @ManyToOne(fetch = FetchType.EAGER) // Team 모두 조회
     @JoinColumn(name = "TEAM_ID")
     private Team team;
 

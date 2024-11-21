@@ -30,9 +30,9 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-            MemberTest m = em.find(MemberTest.class, member1.getId()); //Member 만 SELECT-초기화
-            System.out.println("m = " + m.getTeam().getClass()); // Proxy
-            m.getTeam().getName(); // Team SELECT-초기화
+            MemberTest m = em.find(MemberTest.class, member1.getId()); //Member과 Team 초기화
+            System.out.println("m = " + m.getTeam().getClass()); // Entity
+            m.getTeam().getName(); 
 
 
             tx.commit();
