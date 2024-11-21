@@ -15,6 +15,8 @@ public class MemberTest {
     @JoinColumn(name = "TEAM_ID")
     private Team team;
 
+    private String name;
+
     public Long getId() {
         return id;
     }
@@ -29,5 +31,13 @@ public class MemberTest {
 
     public void setTeam(Team team) {
         this.team = team;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
