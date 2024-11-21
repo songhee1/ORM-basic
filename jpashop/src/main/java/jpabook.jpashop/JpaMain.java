@@ -30,9 +30,14 @@ public class JpaMain {
             parent.addChild(child1);
             parent.addChild(child2);
 
-            em.persist(parent); // CASCADE X :3개 persist 필요, CASCADE O : 1개 persist로 컬렉션 내용 모두 INSERT
-//            em.persist(child1);
-//            em.persist(child2);
+            em.persist(parent); // CascadeType.ALL/PERSIST로 부모,자식 INSERT
+            em.flush();
+            em.clear();
+
+            Parent findParent = em.find(Parent.class, parent.getId());
+
+            findParent.getChildren().remove(0); // 참조 제거된 엔티티 삭제
+
             tx.commit();
         }catch(Exception e){
             tx.rollback();
