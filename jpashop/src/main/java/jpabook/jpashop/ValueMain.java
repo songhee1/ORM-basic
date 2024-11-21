@@ -1,41 +1,19 @@
 package jpabook.jpashop;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.Persistence;
-import jakarta.persistence.criteria.CriteriaBuilder.In;
 import jpabook.jpashop.test.Address;
-import jpabook.jpashop.test.MemberTest;
-import jpabook.jpashop.test.Period;
 
 public class ValueMain {
     public static void main(String[] args){
 
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
-        EntityManager em = emf.createEntityManager();
-        EntityTransaction tx = em.getTransaction();
-        tx.begin();
-        try{
-            Address address = new Address("city", "street", "zipcode");
+        int a = 10;
+        int b = 10;
 
-            MemberTest member = new MemberTest();
-            member.setName("member1");
-            member.setAddress(address);
-            em.persist(member);
+        System.out.println("a == b "+ (a== b)); // true
 
-            //member.getAddress().setCity("xxx") 불가(객체 참조 공유 방지), 새 생성자로 변경
-            Address newAddress = new Address("NewCity", address.getStreet(), address.getZipcode());
-            member.setAddress(newAddress);
+        Address address1 = new Address("city", "street", "zipcode");
+        Address address2 = new Address("city", "street", "zipcode");
 
-            tx.commit();
-        }catch(Exception e){
-            tx.rollback();
-            e.printStackTrace();
-        }finally {
-            em.close();
-        }
-
-        emf.close();
+        System.out.println("address1 == address2 " + (address1 == address2)); // false
+        System.out.println("address1 == address2 " + (address1.equals(address2))); // false, equals 기본이 == 비교(재정의 후 true)
     }
 }

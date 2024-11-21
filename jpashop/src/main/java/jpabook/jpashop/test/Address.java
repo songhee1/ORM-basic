@@ -1,6 +1,7 @@
 package jpabook.jpashop.test;
 
 import jakarta.persistence.Embeddable;
+import java.util.Objects;
 
 @Embeddable // 값 타입 정의
 public class Address {
@@ -30,5 +31,24 @@ public class Address {
         this.city = city;
         this.street = street;
         this.zipcode = zipcode;
+    }
+
+    // 값 타입 비교 equals 재정의
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Address address = (Address) o;
+        return Objects.equals(city, address.city) && Objects.equals(street,
+            address.street) && Objects.equals(zipcode, address.zipcode);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(city, street, zipcode);
     }
 }
