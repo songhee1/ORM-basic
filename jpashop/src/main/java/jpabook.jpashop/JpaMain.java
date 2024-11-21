@@ -6,6 +6,7 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 import jdk.swing.interop.SwingInterOpUtils;
 import jpabook.jpashop.domain.Member;
+import org.hibernate.jpa.internal.PersistenceUnitUtilImpl;
 
 public class JpaMain {
     public static void main(String[] args){
@@ -22,10 +23,11 @@ public class JpaMain {
             em.clear();
 
             Member refMember = em.getReference(Member.class, member1.getId());
-            System.out.println("refMember = " + refMember.getClass()); // Proxy
+            System.out.println("findMember = "+refMember.getClass()); // Proxy
+            System.out.println("isLoaded = " + emf.getPersistenceUnitUtil().isLoaded(refMember)); // false
+            refMember.getName();
+            System.out.println("isLoaded = " + emf.getPersistenceUnitUtil().isLoaded(refMember)); // true
 
-            em.detach(refMember); // 준영속 (clear, close 마찬가지) - 영속성 컨테스트 관리x
-            refMember.getName(); // 초기화 예외발생
             tx.commit();
         }catch(Exception e){
             tx.rollback();
