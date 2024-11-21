@@ -30,13 +30,13 @@ public class JpaMain {
             parent.addChild(child1);
             parent.addChild(child2);
 
-            em.persist(parent); // CascadeType.ALL/PERSIST로 부모,자식 INSERT
+            em.persist(parent); // CascadeType.ALL/PERSIST로 부모,자식 INSERT - LifeCycle 관리(DAO, Repository x)
+
             em.flush();
             em.clear();
 
             Parent findParent = em.find(Parent.class, parent.getId());
-
-            findParent.getChildren().remove(0); // 참조 제거된 엔티티 삭제
+            em.remove(findParent); // 부모 삭제 -> 자식 컬렉션 함께 삭제 - LifeCycle 관리(DAO, Repository x)
 
             tx.commit();
         }catch(Exception e){
