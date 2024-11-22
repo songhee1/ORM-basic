@@ -4,6 +4,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
+import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
@@ -20,25 +22,19 @@ public class ValueMain {
         tx.begin();
         try{
 
-            //Criteria 사용 - 자바코드(컴파일오류 지원), 동적쿼리, 권장x(유지보수 어려움)
-            CriteriaBuilder cb = em.getCriteriaBuilder(); // 자바 표준 스펙
-            CriteriaQuery<MemberTest> query = cb.createQuery(MemberTest.class);
-            Root<MemberTest> m = query.from(MemberTest.class);
-            CriteriaQuery<MemberTest> cq = query.select(m)
-                .where(cb.notEqual(m.get("userName"), "kim"));
-            em.createQuery(cq).getResultList();
-
             MemberTest member = new MemberTest();
-            member.setUserName("member1");
+            member.setUsername("member1");
+            member.setAge(10);
             em.persist(member);
 
-            // [주의]DB connection 획득해 query 발생시 (JPA 무관)
-            //(강제 플러쉬) em.flush()
-            // dbconn.executeQuery("select * from member") // 엔티티 객체는 영속성 컨텍스트에 존재, 결과 0(커밋 후 플러쉬), 강제 플러쉬 필요
+            TypedQuery<MemberTest> query = em.createQuery("select m from MemberTest m",
+                MemberTest.class);// 두번째 매개변수 = 엔티티 클래스명, 반화 클래스 명확, TypedQuery
+            Query query2 = em.createQuery("select m.username, m.age from MemberTest m");// 두번째 매개변수 = 엔티티 클래스명
 
-            // flush 호출 1. commit 직전 2. EntityManager 통한 query 발생
-            List resultList = em.createNativeQuery(
-                "select MEMBER_ID, city, street, zipcode from MEMBER").getResultList(); // 커밋x, query 발생-플러쉬-INSERT, SELECT
+            List<MemberTest> resultList = query.getResultList(); // 컬렉션 반환
+            MemberTest result = query.getSingleResult();// 반환 1개, 그렇지않으면 Exception
+            System.out.println("result = "+result);
+
 
 
             tx.commit();

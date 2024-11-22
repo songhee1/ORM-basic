@@ -9,7 +9,6 @@ public class Address {
     String city;
     String street;
     String zipcode;
-//    private Parent parent; // 엔티티 가질 수 있음
 
     //Setter x / private => 객체 참조 공유 방지, 불변으로 생성
     public String getCity() {

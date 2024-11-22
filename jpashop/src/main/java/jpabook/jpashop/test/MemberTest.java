@@ -25,30 +25,16 @@ import java.util.Set;
 @Entity
 public class MemberTest {
     @Id @GeneratedValue
-    @Column(name = "MEMBER_ID")
     private Long id;
-    private String userName;
-    @Embedded
-    private Address homeAddress;
+    private String username;
+    private int age;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "TEAM_ID")
+    private Team team;
 
-    @ElementCollection// 값 타입 컬렉션(일대다로 별도 테이블 생성)
-    @CollectionTable(name = "FAVORITE_FOOD",// 매핑 테이블명
-        joinColumns = @JoinColumn(name = "MEMBER_ID") // 외래키
-    )
-    @Column(name = "FOOD_NAME")
-    private Set<String> favoriteFoods = new HashSet<>();
+    /*@OneToMany(mappedBy = "member")
+    List<OrderTest> orderList = new ArrayList<>();*/
 
-    /*@ElementCollection// 값 타입 컬렉션
-    @CollectionTable(name = "ADDRESS",// 매핑 테이블명
-        joinColumns = @JoinColumn(name = "MEMBER_ID") // 외래키
-    )
-    private List<Address> addressHistory = new ArrayList<>();
-*/
-
-    // 값 타입 컬렉션 대안-엔티티 매핑(일대다 단방향)
-    @OneToMany(cascade = ALL, orphanRemoval = true) // 권장
-    @JoinColumn(name = "MEMBER_ID")
-    private List<AddressEntity> addressHistory = new ArrayList<>();
     public Long getId() {
         return id;
     }
@@ -57,36 +43,27 @@ public class MemberTest {
         this.id = id;
     }
 
-
-
-    public void setUserName(String name) {
-        this.userName = name;
-    }
-    public Address getHomeAddress() {
-        return homeAddress;
+    public String getUsername() {
+        return username;
     }
 
-    public String getUserName() {
-        return userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public void setHomeAddress(Address homeAddress) {
-        this.homeAddress = homeAddress;
+    public int getAge() {
+        return age;
     }
 
-    public Set<String> getFavoriteFoods() {
-        return favoriteFoods;
+    public void setAge(int age) {
+        this.age = age;
     }
 
-    public void setFavoriteFoods(Set<String> favoriteFoods) {
-        this.favoriteFoods = favoriteFoods;
+    public Team getTeam() {
+        return team;
     }
 
-    public List<AddressEntity> getAddressHistory() {
-        return addressHistory;
-    }
-
-    public void setAddressHistory(List<AddressEntity> addressHistory) {
-        this.addressHistory = addressHistory;
+    public void setTeam(Team team) {
+        this.team = team;
     }
 }

@@ -8,13 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Team {
+public class Product {
     @Id @GeneratedValue
     private Long id;
-
     private String name;
-    @OneToMany(mappedBy = "team")
-    private List<MemberTest> members = new ArrayList<>();
+    private int price;
+    private int stockAmount;
 
     public Long getId() {
         return id;
@@ -32,11 +31,19 @@ public class Team {
         this.name = name;
     }
 
-    public List<MemberTest> getMemberList() {
-        return members;
+    public int getPrice() {
+        return price;
     }
 
-    public void setMemberList(List<MemberTest> memberList) {
-        this.members = memberList;
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public int getStockAmount() {
+        return stockAmount;
+    }
+
+    public void setStockAmount(int stockAmount) {
+        this.stockAmount = stockAmount;
     }
 }
