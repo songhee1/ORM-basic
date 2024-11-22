@@ -6,7 +6,9 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.TypedQuery;
 import java.util.List;
+import jpabook.jpashop.test.Address;
 import jpabook.jpashop.test.MemberTest;
+import jpabook.jpashop.test.Team;
 
 public class ValueMain {
     public static void main(String[] args){
@@ -22,17 +24,30 @@ public class ValueMain {
             member.setAge(10);
             em.persist(member);
 
-            TypedQuery<MemberTest> query = em.createQuery("select m from MemberTest m where m.username = :username",
-                MemberTest.class);
-            query.setParameter("username", "member1"); // 파라미터 바인딩-위치기반x
-            MemberTest result = query.getSingleResult();
+            em.flush();
+            em.clear();
 
-            //메소드 체이닝
-            /*MemberTest chainingResult = em.createQuery(
-                "select m from MemberTest m where m.username = :username",
-                MemberTest.class).setParameter("username", "member1").getSingleResult();*/
+            //엔티티 프로젝션
+            List<MemberTest> result = em.createQuery("select m from MemberTest m", // m : 엔티티, 엔티티 반환
+                MemberTest.class).getResultList(); // SELECT, 영속성 컨텍스트에서 관리
 
-            System.out.println("singleResult = "+result.getUsername());
+            result.get(0).setAge(20); // UPDATE
+
+            //엔티티 프로젝션
+            List<Team> result2 = em.createQuery("select m.team from MemberTest m", Team.class) // 쿼리간단하나, join SELECT
+                .getResultList(); // 쿼리 예측 x(권장x)
+            List<Team> result3 = em.createQuery("select t from MemberTest m join m.team t", Team.class) // join SELECT
+                .getResultList(); // 쿼리 예측, 조인은 명시적으로 하는 것 권장
+
+            // 임베디드 타입 프로젝션
+            List<Address> result4 = em.createQuery("select o.address from OrderTest o",
+                    Address.class)
+                .getResultList();
+
+            // 스칼라 타입 프로젝션
+            em.createQuery("select distinct m.username, m.age from MemberTest m") // join SELECT
+                .getResultList();
+
 
             tx.commit();
         }catch(Exception e){
