@@ -2,6 +2,7 @@ package jpabook.jpashop.domain;
 
 import static jakarta.persistence.FetchType.LAZY;
 
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -13,9 +14,8 @@ public class Delivery extends BaseEntity{
     @Id @GeneratedValue
     private Long id;
 
-    private String city;
-    private String street;
-    private String zipcode;
+    @Embedded
+    private AddressTest addressTest;
 
     private DeliveryStatus deliveryStatus;
 

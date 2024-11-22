@@ -30,4 +30,17 @@ public class AddressEntity {
 
     public AddressEntity() {
     }
+
+    public void setCity(String city) {
+        this.address.city = city;
+    }
+
+    public void setStreet(String street) {
+        this.address.street = street;
+    }
+
+    public void setZipcode(String zipcode) {
+        this.address.zipcode = zipcode;
+    }
+
 }
