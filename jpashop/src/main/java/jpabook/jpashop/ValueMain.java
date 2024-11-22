@@ -5,6 +5,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.TypedQuery;
+import java.util.List;
 import jpabook.jpashop.test.MemberTest;
 
 public class ValueMain {
@@ -16,14 +17,22 @@ public class ValueMain {
         tx.begin();
         try{
 
-            TypedQuery<MemberTest> query = em.createQuery("select m from MemberTest m",
-                MemberTest.class);// 두번째 매개변수 = 엔티티 클래스명, 반화 클래스 명확, TypedQuery
+            MemberTest member = new MemberTest();
+            member.setUsername("member1");
+            member.setAge(10);
+            em.persist(member);
 
-            MemberTest result = query.getSingleResult();// 반환 0개, Exception(반환 1개 보장시 사용)
-            // Spring Data Jpa : Optional, Null 반환, 예외x
-            System.out.println("result = "+result);
+            TypedQuery<MemberTest> query = em.createQuery("select m from MemberTest m where m.username = :username",
+                MemberTest.class);
+            query.setParameter("username", "member1"); // 파라미터 바인딩-위치기반x
+            MemberTest result = query.getSingleResult();
 
+            //메소드 체이닝
+            /*MemberTest chainingResult = em.createQuery(
+                "select m from MemberTest m where m.username = :username",
+                MemberTest.class).setParameter("username", "member1").getSingleResult();*/
 
+            System.out.println("singleResult = "+result.getUsername());
 
             tx.commit();
         }catch(Exception e){
