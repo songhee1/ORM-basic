@@ -56,9 +56,7 @@ public class MemberTest {
         this.id = id;
     }
 
-    public String getName() {
-        return userName;
-    }
+
 
     public void setUserName(String name) {
         this.userName = name;
