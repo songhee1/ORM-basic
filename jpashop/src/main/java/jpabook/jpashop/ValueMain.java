@@ -23,7 +23,7 @@ public class ValueMain {
             team.setName("teamA");
             em.persist(team);
             MemberTest member = new MemberTest();
-            member.setUsername("member1");
+            member.setUsername("memberA");
             member.setAge(10);
 
             member.setTeam(team);
@@ -32,9 +32,8 @@ public class ValueMain {
             em.flush();
             em.clear();
 
-            String query = "select m from MemberTest m inner join m.team";
-            String query2 = "select m from MemberTest m left join m.team"; // left outer join
-            String query3 = "select m from MemberTest m, Team t where m.username = t.name"; // cross join
+            String query = "select m from MemberTest m left join m.team t on t.name = 'teamA'"; //on t.id=m.team_id and t.name = 'teamA', 조인조건문에 추가
+            String query2 = "select m from MemberTest m left join Team t on t.name = m.username"; //on t.name = m.username, 조인조건문에 추가
 
             List<MemberTest> result = em.createQuery(
                     query, MemberTest.class)
@@ -42,9 +41,6 @@ public class ValueMain {
 
             List<MemberTest> result2 = em.createQuery(
                     query2, MemberTest.class)
-                .getResultList();
-            List<MemberTest> result3 = em.createQuery(
-                    query3, MemberTest.class)
                 .getResultList();
 
             tx.commit();
