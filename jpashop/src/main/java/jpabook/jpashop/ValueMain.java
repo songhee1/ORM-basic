@@ -5,8 +5,9 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 import java.util.List;
-import jpabook.jpashop.domain.Book;
-import jpabook.jpashop.domain.Item;
+import jpabook.jpashop.test.MemberTest;
+import jpabook.jpashop.test.MemberType;
+import jpabook.jpashop.test.Team;
 
 public class ValueMain {
     public static void main(String[] args){
@@ -16,17 +17,39 @@ public class ValueMain {
         EntityTransaction tx = em.getTransaction();
         tx.begin();
         try{
-            Book book = new Book();
-            book.setName("book");
-            em.persist(book);
+            Team team = new Team();
+            team.setName("teamA");
+            em.persist(team);
+
+            MemberTest member = new MemberTest();
+            member.setAge(10);
+            member.setType(MemberType.ADMIN);
+            member.setTeam(team);
+            member.setUsername("관리자");
+            em.persist(member);
+
             em.flush();
             em.clear();
+            // CASE식
+            String query = "select "
+                + "case when m.age<=10 then '학생요금' "
+                + "     when m.age>=60 then '경로요금' "
+                + "     else '일반 요금'  "
+                + "end "
+                + "from MemberTest m";
 
-            List resultList = em.createQuery("select i from Item i where type(i) = Book", Item.class) // DTYPE = 'Book', 엔티티 타입 매핑
-                .getResultList();
+            List<String> resultList = em.createQuery(query, String.class).getResultList();
 
+            // COALESCE
+            String query2 = "select COALESCE(m.username, '이름없는 회원') from MemberTest  m";
+            String singleResult = em.createQuery(query2, String.class).getSingleResult();
+
+            // NULLIF
+            String query3 = "select NULLIF(m.username, '관리자') from MemberTest  m";
+            String singleResult2 = em.createQuery(query3, String.class).getSingleResult();
+            System.out.println(singleResult);
             tx.commit();
-        }catch(Exception e){ 
+        }catch(Exception e){
             tx.rollback();
             e.printStackTrace();
         }finally {
