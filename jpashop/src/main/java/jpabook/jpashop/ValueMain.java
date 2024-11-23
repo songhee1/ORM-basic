@@ -9,6 +9,7 @@ import java.util.List;
 import jpabook.jpashop.test.Address;
 import jpabook.jpashop.test.MemberDTO;
 import jpabook.jpashop.test.MemberTest;
+import jpabook.jpashop.test.MemberType;
 import jpabook.jpashop.test.Team;
 
 public class ValueMain {
@@ -24,6 +25,7 @@ public class ValueMain {
             em.persist(team);
             MemberTest member = new MemberTest();
             member.setUsername("memberA");
+            member.setType(MemberType.ADMIN);
             member.setAge(10);
 
             member.setTeam(team);
@@ -32,16 +34,25 @@ public class ValueMain {
             em.flush();
             em.clear();
 
-            String query = "select m from MemberTest m left join m.team t on t.name = 'teamA'"; //on t.id=m.team_id and t.name = 'teamA', 조인조건문에 추가
-            String query2 = "select m from MemberTest m left join Team t on t.name = m.username"; //on t.name = m.username, 조인조건문에 추가
+            String query = "select m.username, 'HELLO', TRUE, FALSE, true, false from MemberTest m "+
+                "where m.type = jpabook.jpashop.test.MemberType.ADMIN"; // 패키지명 기입
 
-            List<MemberTest> result = em.createQuery(
-                    query, MemberTest.class)
+            String query2 = "select m.username, 'HELLO', TRUE, FALSE, true, false from MemberTest m "+
+                "where m.type = :userType";
+            List<Object[]> result = em.createQuery(
+                    query)
                 .getResultList();
 
-            List<MemberTest> result2 = em.createQuery(
-                    query2, MemberTest.class)
+            List<Object[]> result2 = em.createQuery(
+                    query2).setParameter("userType", MemberType.ADMIN) // 파라미터 매핑 권장-이넘타입
                 .getResultList();
+
+
+            for (Object[] objects : result) {
+                System.out.println("objects = "+ objects[0]);
+                System.out.println("objects = "+ objects[1]);
+                System.out.println("objects = "+ objects[2]);
+            }
 
             tx.commit();
         }catch(Exception e){

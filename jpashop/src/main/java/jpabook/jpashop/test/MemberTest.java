@@ -10,6 +10,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -28,9 +30,12 @@ public class MemberTest {
     private Long id;
     private String username;
     private int age;
-    @ManyToOne(fetch = FetchType.LAZY) // 즉시로딩-MemberTest join query시 TEAM SELECT 쿼리 발생
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TEAM_ID")
     private Team team;
+
+    @Enumerated(EnumType.STRING) // query에서 이넘명
+    private MemberType type;
 
     /*@OneToMany(mappedBy = "member")
     List<OrderTest> orderList = new ArrayList<>();*/
@@ -75,5 +80,13 @@ public class MemberTest {
             ", username='" + username + '\'' +
             ", age=" + age +
             '}'; // 양방향 되면 안됨
+    }
+
+    public MemberType getType() {
+        return type;
+    }
+
+    public void setType(MemberType type) {
+        this.type = type;
     }
 }
