@@ -19,39 +19,26 @@ public class ValueMain {
         EntityTransaction tx = em.getTransaction();
         tx.begin();
         try{
-
-            MemberTest member = new MemberTest();
-            member.setUsername("member1");
-            member.setAge(10);
-            em.persist(member);
+            for(int i=1;i<=100;i++){
+                MemberTest member = new MemberTest();
+                member.setUsername("member"+i);
+                member.setAge(i);
+                em.persist(member);
+            }
 
             em.flush();
             em.clear();
 
-            // 스칼라 타입 프로젝션
-            List resultList = em.createQuery(
-                    "select distinct m.username, m.age from MemberTest m") // join SELECT
+            List<MemberTest> result = em.createQuery(
+                    "select m from MemberTest m order by m.age desc", MemberTest.class)
+                .setFirstResult(0)
+                .setMaxResults(10)
                 .getResultList();
 
-            // 1. Object 2. Object[]
-            Object o = resultList.get(0);
-            Object[] result = (Object[]) o;
-            System.out.println("username = "+result[0]); // username
-            System.out.println("age = "+result[1]); // age
-
-            //3. TypeQuery
-            List<Object[]> resultList2 = em.createQuery(
-                    "select distinct m.username, m.age from MemberTest m") // join SELECT
-                .getResultList(); // 타입 캐스팅
-
-            //4. new(권장)
-            List<MemberDTO> resultList1 = em.createQuery(
-                "select new jpabook.jpashop.test.MemberDTO(m.username, m.age) from MemberTest m",
-                MemberDTO.class).getResultList();
-            MemberDTO memberDTO = resultList1.get(0);
-            System.out.println("memberDTO.username = "+ memberDTO.getUsername());
-            System.out.println("memberDTO.age = "+ memberDTO.getAge());
-
+            System.out.println("result size = "+result.size());
+            for (MemberTest memberTest : result) {
+                System.out.println(memberTest);
+            }
 
             tx.commit();
         }catch(Exception e){

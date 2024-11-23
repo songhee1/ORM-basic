@@ -66,4 +66,13 @@ public class MemberTest {
     public void setTeam(Team team) {
         this.team = team;
     }
+
+    @Override
+    public String toString() {
+        return "MemberTest{" +
+            "id=" + id +
+            ", username='" + username + '\'' +
+            ", age=" + age +
+            '}'; // 양방향 되면 안됨
+    }
 }
