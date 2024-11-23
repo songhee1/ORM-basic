@@ -19,26 +19,33 @@ public class ValueMain {
         EntityTransaction tx = em.getTransaction();
         tx.begin();
         try{
-            for(int i=1;i<=100;i++){
-                MemberTest member = new MemberTest();
-                member.setUsername("member"+i);
-                member.setAge(i);
-                em.persist(member);
-            }
+            Team team = new Team();
+            team.setName("teamA");
+            em.persist(team);
+            MemberTest member = new MemberTest();
+            member.setUsername("member1");
+            member.setAge(10);
+
+            member.setTeam(team);
+            em.persist(member);
 
             em.flush();
             em.clear();
 
+            String query = "select m from MemberTest m inner join m.team";
+            String query2 = "select m from MemberTest m left join m.team"; // left outer join
+            String query3 = "select m from MemberTest m, Team t where m.username = t.name"; // cross join
+
             List<MemberTest> result = em.createQuery(
-                    "select m from MemberTest m order by m.age desc", MemberTest.class)
-                .setFirstResult(0)
-                .setMaxResults(10)
+                    query, MemberTest.class)
                 .getResultList();
 
-            System.out.println("result size = "+result.size());
-            for (MemberTest memberTest : result) {
-                System.out.println(memberTest);
-            }
+            List<MemberTest> result2 = em.createQuery(
+                    query2, MemberTest.class)
+                .getResultList();
+            List<MemberTest> result3 = em.createQuery(
+                    query3, MemberTest.class)
+                .getResultList();
 
             tx.commit();
         }catch(Exception e){

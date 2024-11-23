@@ -28,7 +28,7 @@ public class MemberTest {
     private Long id;
     private String username;
     private int age;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY) // 즉시로딩-MemberTest join query시 TEAM SELECT 쿼리 발생
     @JoinColumn(name = "TEAM_ID")
     private Team team;
 
@@ -63,8 +63,9 @@ public class MemberTest {
         return team;
     }
 
-    public void setTeam(Team team) {
+    public void setTeam(Team team) { // 연관관계 편의 메서드
         this.team = team;
+        team.getMemberList().add(this);
     }
 
     @Override
