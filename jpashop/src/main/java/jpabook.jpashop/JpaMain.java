@@ -17,8 +17,10 @@ public class JpaMain {
         tx.begin();
         try{
             Team teamA = new Team();
+            teamA.setName("teamA");
             em.persist(teamA);
             Team teamB = new Team();
+            teamB.setName("teamB");
             em.persist(teamB);
 
             MemberTest member1 = new MemberTest();
@@ -36,16 +38,23 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-            String query = "select m from MemberTest m"; // Team은 프록시 객체설정
-            List<MemberTest> result = em.createQuery(query, MemberTest.class).getResultList(); //select member
+            String query = "select m from MemberTest m join fetch m.team"; // Team 엔티티 초기화, 페치조인>지연로딩, 다대일 조인
+            String query2 = "select t from Team t join fetch t.members"; // 일대다 조인, data 뻥튀기(단점)
+            List<MemberTest> result = em.createQuery(query, MemberTest.class).getResultList(); //select member, team
+            List<Team> result2 = em.createQuery(query2, Team.class).getResultList();
             for (MemberTest member : result) { // teamA, teamB 각각 select
                 System.out.println("member="+member.getUsername()+", team name = " + member.getTeam().getName());
-                // 회원1, 팀A(SQL)
+                // 회원1, 팀A(1차 캐시)
                 // 회원2, 팀A(1차 캐시)
-                // 회원3, 팀B(SQL)
-                // 총 3번
+                // 회원3, 팀B(1차 캐시)
+                // 총 1번
+            }
 
-                // 회원수 많을수록 N(SELECT TEAM)+1(SELECT MEMBER)쿼리, 즉시/지연로딩 마찬가지
+            for (Team team : result2) {
+                System.out.println("team = "+team.getName()+", team.getMembers().size() = "+ team.getMemberList().size()); // 중복발생
+                for (MemberTest member : team.getMemberList()){
+                    System.out.println("member = " +member);
+                }
             }
 
             tx.commit();
