@@ -38,8 +38,10 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-//            String query = "select t from Team t join t.members m"; // SELECT TEAM만 됨, MEMBERS 데이터 로딩X
-            String query = "select t from Team t join fetch t.members m"; // SELECT TEAM, MEMBERS 모두 데이터 로딩
+            String query = "select t from Team t join fetch t.members";
+            // 페치조인 대상에는 별칭x, 별칭 사용해 필터링하고싶으면 처음부터 member로 쿼리작성
+            String query2 = "select m from MemberTest m join fetch m.team";
+
             List<Team> result = em.createQuery(query, Team.class).getResultList();
 
             for (Team team : result) {
