@@ -28,22 +28,13 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-            // 단일값 연관경로
-            String query = "select m.team.name from MemberTest m"; // name은 상태필드, 경로탐색의 끝, 묵시적 내부조인(탐색o)
-            String query2 = "select m.team from MemberTest m"; // select team from member join teawm, 조인(묵시적내부조인)
-
-            List<String> result = em.createQuery(query, String.class).getResultList();
-            List<Team> result2 = em.createQuery(query2, Team.class).getResultList();
 
             // 컬렉션 값 연관경로
-            String query3 = "select t.members from Team t";
-            String query4 = "select size(t.members) from Team t"; // size 사용가능
+            String query3 = "select m.username from Team t join t.members m"; // from절 명시적 내부조인(별칭), 탐색o
             Collection result3 = em.createQuery(query3, Collection.class).getResultList(); // 묵시적 내부조인, 탐색x
             for (Object o : result3) {
                 System.out.println("o = "+ o);
             }
-            Integer result4 = em.createQuery(query4, Integer.class).getSingleResult();
-            System.out.println(result4);
 
             tx.commit();
         }catch(Exception e){
