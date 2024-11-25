@@ -1,11 +1,15 @@
 package jpabook.jpashop.dialect;
 
+import org.hibernate.boot.model.FunctionContributions;
+import org.hibernate.boot.model.FunctionContributor;
 import org.hibernate.dialect.H2Dialect;
-import org.hibernate.engine.jdbc.dialect.spi.DialectResolutionInfo;
+import org.hibernate.dialect.function.StandardSQLFunction;
+import org.hibernate.type.StandardBasicTypes;
 
-public class MyH2Dialect extends H2Dialect {
+public class CustomFunctionContributor implements FunctionContributor {
 
-    public MyH2Dialect() {
-        registerFunction
+    public void contributeFunctions(FunctionContributions functionContributions) {
+        functionContributions.getFunctionRegistry()
+            .register("group_concat", new StandardSQLFunction("group_concat", StandardBasicTypes.STRING));
     }
 }
