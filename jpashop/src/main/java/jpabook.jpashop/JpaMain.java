@@ -38,7 +38,8 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-            String query = "select t from Team t join fetch t.members"; // 일대다 조인, data 뻥튀기(단점)->distinct(자동으로 됨)
+//            String query = "select t from Team t join t.members m"; // SELECT TEAM만 됨, MEMBERS 데이터 로딩X
+            String query = "select t from Team t join fetch t.members m"; // SELECT TEAM, MEMBERS 모두 데이터 로딩
             List<Team> result = em.createQuery(query, Team.class).getResultList();
 
             for (Team team : result) {
