@@ -49,12 +49,11 @@ public class JpaMain {
             for (Team team : result) {
                 System.out.println("team = "+team.getName()+", team.getMembers().size() = "+ team.getMemberList().size()); // 중복제거(같은 식별자 가진 team 엔티티 제거)
                 for (MemberTest member : team.getMemberList()){
-                    System.out.println("member = " +member);// TEAM A -> SELECT MEMBER, TEAM B -> SELECT MEMBER
+                    System.out.println("member = " +member);//SELECT MEMBER WHERE TEAM_ID IN(? , ?, ..), LAZY LOADING 가져올때 한번에 모든 팀 ID인 MEMBER 가져옴
                 }
                 System.out.println();
             }
-            // 일반적으로 지연로딩 사용시 총 3번 쿼리, N+1문제
-            // join fetch 는 일대다 관계에서 사용불가
+            // 총 2번
 
             tx.commit();
         }catch(Exception e){

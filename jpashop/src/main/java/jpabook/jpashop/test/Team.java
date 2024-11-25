@@ -14,7 +14,7 @@ public class Team {
     private Long id;
 
     private String name;
-    @BatchSize(size = 20)
+    @BatchSize(size = 100)
     @OneToMany(mappedBy = "team")
     private List<MemberTest> members = new ArrayList<>();
 
