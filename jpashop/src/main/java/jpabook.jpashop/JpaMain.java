@@ -38,19 +38,23 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-            String query = "select t from Team t join fetch t.members";
-            // 페치조인 대상에는 별칭x, 별칭 사용해 필터링하고싶으면 처음부터 member로 쿼리작성
-            String query2 = "select m from MemberTest m join fetch m.team";
+            //컬렉션 페치조인시 페이징API X
+            String query = "select t from Team t"; // LAZY LOADING
 
-            List<Team> result = em.createQuery(query, Team.class).getResultList();
+            List<Team> result = em.createQuery(query, Team.class) // SELECT TEAM
+                .setFirstResult(0)
+                .setMaxResults(2)
+                .getResultList();
 
             for (Team team : result) {
                 System.out.println("team = "+team.getName()+", team.getMembers().size() = "+ team.getMemberList().size()); // 중복제거(같은 식별자 가진 team 엔티티 제거)
                 for (MemberTest member : team.getMemberList()){
-                    System.out.println("member = " +member);
+                    System.out.println("member = " +member);// TEAM A -> SELECT MEMBER, TEAM B -> SELECT MEMBER
                 }
                 System.out.println();
             }
+            // 일반적으로 지연로딩 사용시 총 3번 쿼리, N+1문제
+            // join fetch 는 일대다 관계에서 사용불가
 
             tx.commit();
         }catch(Exception e){
