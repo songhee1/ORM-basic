@@ -38,22 +38,21 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-            //컬렉션 페치조인시 페이징API X
-            String query = "select t from Team t"; // LAZY LOADING
+            // 엔티티 직접 사용
+            String query = "select m from MemberTest m where m = :member"; // 엔티티 전달(id값 전달)
 
-            List<Team> result = em.createQuery(query, Team.class) // SELECT TEAM
-                .setFirstResult(0)
-                .setMaxResults(2)
-                .getResultList();
+            MemberTest findMember = em.createQuery(query, MemberTest.class)
+                .setParameter("member", member1).getSingleResult();
 
-            for (Team team : result) {
-                System.out.println("team = "+team.getName()+", team.getMembers().size() = "+ team.getMemberList().size()); // 중복제거(같은 식별자 가진 team 엔티티 제거)
-                for (MemberTest member : team.getMemberList()){
-                    System.out.println("member = " +member);//SELECT MEMBER WHERE TEAM_ID IN(? , ?, ..), LAZY LOADING 가져올때 한번에 모든 팀 ID인 MEMBER 가져옴
-                }
-                System.out.println();
-            }
-            // 총 2번
+            System.out.println("findMember = " + findMember);
+
+            String query2 = "select m from MemberTest m where m.id = :memberId"; // 동일
+
+            MemberTest findMember2 = em.createQuery(query2, MemberTest.class)
+                .setParameter("memberId", member1.getId()).getSingleResult();
+
+            System.out.println("findMember = " + findMember2);
+
 
             tx.commit();
         }catch(Exception e){
