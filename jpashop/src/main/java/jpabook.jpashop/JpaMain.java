@@ -38,11 +38,10 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-            // 엔티티 직접 사용
-            String query = "select m from MemberTest m where m.team = :team"; // 외래키값 TEAM_ID전달
-
-            List<MemberTest> team = em.createQuery(query, MemberTest.class)
-                .setParameter("team", teamA).getResultList();
+            List<MemberTest> result = em.createNamedQuery("Member.findByUsername", // NamedQuery
+                    MemberTest.class)
+                .setParameter("username", "회원1")
+                .getResultList();
 
             tx.commit();
         }catch(Exception e){
