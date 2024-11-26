@@ -39,20 +39,10 @@ public class JpaMain {
             em.clear();
 
             // 엔티티 직접 사용
-            String query = "select m from MemberTest m where m = :member"; // 엔티티 전달(id값 전달)
+            String query = "select m from MemberTest m where m.team = :team"; // 외래키값 TEAM_ID전달
 
-            MemberTest findMember = em.createQuery(query, MemberTest.class)
-                .setParameter("member", member1).getSingleResult();
-
-            System.out.println("findMember = " + findMember);
-
-            String query2 = "select m from MemberTest m where m.id = :memberId"; // 동일
-
-            MemberTest findMember2 = em.createQuery(query2, MemberTest.class)
-                .setParameter("memberId", member1.getId()).getSingleResult();
-
-            System.out.println("findMember = " + findMember2);
-
+            List<MemberTest> team = em.createQuery(query, MemberTest.class)
+                .setParameter("team", teamA).getResultList();
 
             tx.commit();
         }catch(Exception e){
