@@ -38,14 +38,24 @@ public class JpaMain {
             em.persist(member2);
             em.persist(member3);
 
-            em.flush();
-            em.clear();
-
             //모든 회원 나이를 10으로 UPDATE
-
+            //flush 자동 호출(commit, query)
             int resultCountColumn = em.createQuery("update MemberTest  m set m.age = 20")
-                .executeUpdate();//벌크연산, update 1회
-            System.out.println(resultCountColumn); // 3
+                .executeUpdate(); // db에만 반영
+
+            // 영속성 컨텍스트에는 반영 아직x
+            System.out.println("member1.getAget() = "+member1.getAge());// 0
+            System.out.println("member2.getAget() = "+member2.getAge());// 0
+            System.out.println("member3.getAget() = "+member3.getAge());// 0
+
+            MemberTest findMember = em.find(MemberTest.class, member1.getId());
+            System.out.println(findMember.getAge()); // 0
+
+            em.clear(); // 영속성 컨텍스트 초기화
+            MemberTest findMember2 = em.find(MemberTest.class, member1.getId());
+            System.out.println(findMember2.getAge()); // 20
+
+
             tx.commit();
         }catch(Exception e){
             tx.rollback();
