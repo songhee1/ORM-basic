@@ -26,23 +26,26 @@ public class JpaMain {
             MemberTest member1 = new MemberTest();
             MemberTest member2 = new MemberTest();
             MemberTest member3 = new MemberTest();
-            member1.setTeam(teamA);
             member1.setUsername("회원1");
             member2.setUsername("회원2");
             member3.setUsername("회원3");
+
+            member1.setTeam(teamA);
             member2.setTeam(teamA);
             member3.setTeam(teamB);
+
             em.persist(member1);
             em.persist(member2);
             em.persist(member3);
+
             em.flush();
             em.clear();
 
-            List<MemberTest> result = em.createNamedQuery("Member.findByUsername", // NamedQuery
-                    MemberTest.class)
-                .setParameter("username", "회원1")
-                .getResultList();
+            //모든 회원 나이를 10으로 UPDATE
 
+            int resultCountColumn = em.createQuery("update MemberTest  m set m.age = 20")
+                .executeUpdate();//벌크연산, update 1회
+            System.out.println(resultCountColumn); // 3
             tx.commit();
         }catch(Exception e){
             tx.rollback();
